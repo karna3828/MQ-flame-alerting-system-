@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MQ-4 | Gas Alert Station</title><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">M4</div><div><b>MQ-4 GAS ALERT STATION</b><small>INSTRUMENTATION · LIVE MONITORING</small></div></div>
+  <div class="connection"><i id="connDot"></i><span id="connText">ARDUINO OFFLINE</span><button id="connectBtn" class="btn small">CONNECT USB</button><button id="disconnectBtn" class="btn small secondary" disabled>DISCONNECT</button></div>
+</header>
+<main class="dashboard">
+  <section class="leftcol">
+    <div class="section-kicker">01 / SENSOR TELEMETRY</div>
+    <article class="panel reading-panel">
+      <div class="panel-title"><div><span class="kicker">MQ-4 · ANALOG CHANNEL A0</span><h1>Live gas sensor</h1></div><span class="tag">10-BIT ADC</span></div>
+      <div class="value-row"><strong id="raw">---</strong><span>ADC / 1023</span><div class="voltage"><b id="voltage">--</b><small>VOLTS</small></div></div>
+      <div class="scale"><div id="bar"></div></div><div class="scale-label"><span>0</span><span>512</span><span>1023</span></div>
+      <div class="stats"><div><small>SAMPLES RECEIVED</small><b id="samples">0</b></div><div><small>LAST UPDATE</small><b id="updated">—</b></div><div><small>STREAM</small><b id="stream">WAITING</b></div></div>
+    </article>
+    <article class="panel graph-panel">
+      <div class="panel-title"><div><span class="kicker">02 / TREND ANALYSIS</span><h2>Raw reading history</h2></div><span class="tag cyan">LIVE TRACE</span></div>
+      <canvas id="chart" width="900" height="260"></canvas>
+      <div class="graph-foot"><span>Y: ADC counts · X: recent samples</span><span>Range 0–1023</span></div>
+    </article>
+    <article class="panel threshold-panel">
+      <div class="panel-title"><div><span class="kicker">03 / CONFIGURATION</span><h2>Prototype thresholds</h2></div><span class="tag amber">RAW ADC · NOT PPM</span></div>
+      <div class="threshold-row">
+        <label>WARNING LEVEL<input id="warnLevel" type="number" min="1" max="1022" value="400"></label>
+        <label>ALERT LEVEL<input id="alertLevel" type="number" min="2" max="1023" value="650"></label>
+        <button id="apply" class="btn secondary">APPLY</button>
+      </div>
+      <p class="fine">Demonstration thresholds only. Establish a stable baseline and calibrate using the sensor datasheet and suitable reference equipment. Raw ADC values are not methane ppm.</p>
+    </article>
+  </section>
+
+  <section class="rightcol">
+    <div class="section-kicker">04 / ALARM & RESPONSE</div>
+    <article id="alarmPanel" class="panel alarm-panel idle">
+      <div class="alarm-head"><span class="kicker">SYSTEM CONDITION</span><span id="stateTag" class="state-tag">STANDBY</span></div>
+      <div class="status-icon" id="statusIcon">✓</div>
+      <h2 id="statusTitle">Monitoring ready</h2>
+      <p id="statusDesc">Connect the MQ-4 Arduino stream. The system will latch an alert when the configured raw reading threshold is crossed.</p>
+      <div class="alarm-rule"></div>
+      <div class="timer-label">PERSISTENCE CHECK / 02:00</div>
+      <div class="timer" id="timer">02:00</div>
+      <p class="timer-note" id="timerNote">Timer starts only after an alert is triggered.</p>
+      <div class="response-box" id="responseBox">No active alert.</div>
+      <button id="silenceBtn" class="btn secondary full" disabled>SILENCE SOUND</button>
+      <button id="resetBtn" class="btn secondary full" disabled>RESET AFTER MANUAL CHECK</button>
+    </article>
+    <article class="panel controls">
+      <span class="kicker">05 / FUNCTIONAL TEST</span><h2>Test the alert sequence</h2>
+      <p>Simulates a sensor threshold event, latched audible alarm and two-minute persistence timer. It does not test real gas detection.</p>
+      <button id="testBtn" class="btn test full">RUN ALERT TEST</button>
+      <button id="stopTestBtn" class="btn secondary full" disabled>STOP TEST</button>
+      <div class="audio-row"><span class="audio-dot"></span><span id="audioStatus">Audio idle · browser click required</span></div>
+    </article>
+    <article class="panel note-panel">
+      <span class="kicker">SENSOR SCOPE</span>
+      <p><b>MQ-4 detects methane / combustible gas.</b> It does not detect smoke or flames. This prototype is not a certified fire or gas safety system.</p>
+    </article>
+  </section>
+</main>
+<footer><span>MQ-4 · UNO R3 PWM · A0 · 9600 BAUD</span><span>EDUCATIONAL PROTOTYPE / NOT FOR LIFE-SAFETY USE</span></footer>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body></html>
